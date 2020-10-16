@@ -15,31 +15,50 @@ class GA():
 
 		# buffer the result of distance between 2 cities
 		# to save computation
-		self.distance = dict()
+		self.dist = self.computeDist(self.dna_size)
 
 		# init populations
 		self.pop = self.initPop(self.pop_size, self.dna_size, self.start)
+
+		# compute the fitness of each individual
+		self.fitness = self.computeFit()
 
 	def initPop(self, pop_size, dna_size, start_city):
 		'''
 		initial the individuals
 		'''
-		pop = np.zeros((pop_size,dna_size))
+		pop = np.zeros((pop_size,dna_size), dtype=int)
 		for i in range(pop_size):
 			pop[i] = np.arange(dna_size)
 			np.random.shuffle(pop[i])
+
+			# put the start node at the begining
+			if pop[i][0] != start_city:
+				pop[i][pop[i] == start_city] = pop[i][0]
+				pop[i][0] = start_city
 		return pop
 
-	def computeDist(self):
+	def computeDist(self, dna_size):
 		'''
 		compute the distance between each city and save in buffer
 		'''
-		self.dist = np.zeros((self.dna_size, self.dna_size))
-		for i in range(self.dna_size):
-			for j in range(i+1, self.dna_size):
-				dist = np.sqrt(np.square(self.cities[i][0]-self.cities[j][0])+
+		dist = np.zeros((dna_size, dna_size))
+		for i in range(dna_size):
+			for j in range(i+1, dna_size):
+				d = np.sqrt(np.square(self.cities[i][0]-self.cities[j][0])+
 						np.square(self.cities[i][1]-self.cities[j][1]))
+				dist[i][j] = d
+				dist[j][i] = d
+		return dist
 
-				self.dist[i][j] = dist
-				self.dist[j][i] = dist
+	def computeFit(self):
+		fitness = np.zeros(self.pop_size)
+		for i in range(self.pop_size):
+			x = self.pop[i]
+			y = np.roll(self.pop[i], -1)
+			fitness[i] = np.sum(self.dist[x,y])
+		return fitness
+
+
+
 
