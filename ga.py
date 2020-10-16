@@ -73,27 +73,39 @@ class GA():
 		pass
 
 	def crossover(self):
-		for i in range(self.pop_size)
-			parent1 = self.pop[i]
+		'''
+		crossover: male and female exchange the dqa
+		'''
+		for i in range(self.pop_size):
+			male = self.pop[i]
 
 			if np.random.rand() < self.co_rate:
 				_i = np.random.randint(self.pop_size)
-				parent2 = self.pop[_i]
+				female = self.pop[_i]
 
 				pos = np.random.randint(low=1,high=self.dna_size,size=2)
 				head = min(pos)
 				tail = max(pos)
 
+				# pattern should keep in both male and female
+				keep_dna = male[head:tail]
+				male_exchange_dna_mask = ~np.isin(male, keep_dna)
+				# male dna for exchange
+				male_exchange_dna = male[male_exchange_dna_mask]
 
+				female_exchange_dna_mask = ~np.isin(female, keep_dna)
+				# female dna for exchange
+				female_exchange_dna = female[female_exchange_dna_mask]
 
-
-		pass
+				# exchange the dna
+				male[male_exchange_dna_mask] = female_exchange_dna
+				female[female_exchange_dna_mask] = male_exchange_dna
 
 	def mutation(self):
 		'''
 		mutation by swap 2 city
 		'''
-		for i in range(self.pop_size)
+		for i in range(self.pop_size):
 			if np.random.rand() < self.mut_rate:
 				pos = np.random.randint(low=1,high=self.dna_size,size=2)
 				temp = self.pop[i,pos[0]]

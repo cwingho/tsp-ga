@@ -13,5 +13,4 @@ cities = [	[0.3642,0.7770],
 			[0.4516,0.0488]	]
 
 ga = GA(cities)
-print(ga.cost)
-ga.select()
+ga.crossover()
