@@ -2,6 +2,7 @@ import numpy as np
 import math
 class GA():
 	def __init__(self, cities, start_city=0, population_size=10, crossover_rate=0.8, mutation_rate=0.1, seed=0):
+		# set seed for reproducing result
 		np.random.seed(seed)
 
 		self.cities = np.asarray(cities)
@@ -21,7 +22,7 @@ class GA():
 		self.pop = self.initPop(self.pop_size, self.dna_size, self.start)
 
 		# compute the fitness of each individual
-		self.fitness = self.computeFit()
+		self.cost = self.computeCost()
 
 	def initPop(self, pop_size, dna_size, start_city):
 		'''
@@ -40,7 +41,7 @@ class GA():
 
 	def computeDist(self, dna_size):
 		'''
-		compute the distance between each city and save in buffer
+		compute the distance between each city and save for buffering
 		'''
 		dist = np.zeros((dna_size, dna_size))
 		for i in range(dna_size):
@@ -51,13 +52,54 @@ class GA():
 				dist[j][i] = d
 		return dist
 
-	def computeFit(self):
-		fitness = np.zeros(self.pop_size)
+	def computeCost(self):
+		cost = np.zeros(self.pop_size)
 		for i in range(self.pop_size):
 			x = self.pop[i]
 			y = np.roll(self.pop[i], -1)
-			fitness[i] = np.sum(self.dist[x,y])
-		return fitness
+			cost[i] = np.sum(self.dist[x,y])
+		return cost
+
+	def select(self):
+		'''
+		select the individuals based on the their cost
+		lower cost, high prob to be selected
+		selected individuals (elite) will replace the whole populations
+		'''
+		p = np.reciprocal(self.cost)
+		idx = np.random.choice(np.arange(self.pop_size),size=self.pop_size,
+								replace=True,p=p/p.sum())
+		self.pop = self.pop[idx]
+		pass
+
+	def crossover(self):
+		for i in range(self.pop_size)
+			parent1 = self.pop[i]
+
+			if np.random.rand() < self.co_rate:
+				_i = np.random.randint(self.pop_size)
+				parent2 = self.pop[_i]
+
+				pos = np.random.randint(low=1,high=self.dna_size,size=2)
+				head = min(pos)
+				tail = max(pos)
+
+
+
+
+		pass
+
+	def mutation(self):
+		'''
+		mutation by swap 2 city
+		'''
+		for i in range(self.pop_size)
+			if np.random.rand() < self.mut_rate:
+				pos = np.random.randint(low=1,high=self.dna_size,size=2)
+				temp = self.pop[i,pos[0]]
+				self.pop[i,pos[0]] = self.pop[i,pos[1]]
+				self.pop[i,pos[1]] = temp
+				
 
 
 
