@@ -12,5 +12,22 @@ cities = [	[0.3642,0.7770],
 			[0.3479,0.6984],
 			[0.4516,0.0488]	]
 
-ga = GA(cities)
-ga.crossover()
+n_gen = 10000
+
+ga = GA(cities, start_city=0, 
+				population_size=20, 
+				crossover_rate=0.8, 
+				mutation_rate=0.1,
+				elite_rate=0.1,
+				seed=0)
+
+for gen in range(n_gen):
+	ga.select()
+	ga.crossover()
+	ga.mutation()
+	ga.updateCost()
+	ga.eliteSurvive()
+
+	path, cost = ga.getBestPop()
+	print('Gen:{} Best path:{} Cost:{}'.format(gen+1, path, cost))
+

@@ -1,7 +1,15 @@
 import numpy as np
 import math
+
 class GA():
-	def __init__(self, cities, start_city=0, population_size=10, crossover_rate=0.8, mutation_rate=0.1, seed=0):
+	def __init__(self,	cities, 
+						start_city=0, 
+						population_size=10, 
+						crossover_rate=0.8, 
+						mutation_rate=0.1, 
+						elite_rate=0.1,
+						seed=0):
+
 		# set seed for reproducing result
 		np.random.seed(seed)
 
@@ -9,7 +17,11 @@ class GA():
 		self.pop_size = population_size
 		self.co_rate = crossover_rate
 		self.mut_rate = mutation_rate
+		self.elite_rate = elite_rate
 		self.start = start_city
+
+		# no. of elite that reintroduce in next generation
+		self.n_elite = math.floor(self.pop_size*self.elite_rate)
 
 		# the size of the chromosome is the no. of cities
 		self.dna_size = len(cities)
@@ -69,8 +81,29 @@ class GA():
 		p = np.reciprocal(self.cost)
 		idx = np.random.choice(np.arange(self.pop_size),size=self.pop_size,
 								replace=True,p=p/p.sum())
+
+		self.saveLastGen()
 		self.pop = self.pop[idx]
-		pass
+
+	def saveLastGen(self):
+		'''
+		save the current pop and cost fot next generation
+		'''
+		self.last_pop = self.pop.copy()
+		self.last_cost = self.cost.copy()
+
+	def eliteSurvive(self):
+		# get the elite individuals
+		elite_idx = np.argsort(self.last_cost)[:self.n_elite]
+		elite_pop = self.last_pop[elite_idx]
+		elite_cost = self.last_cost[elite_idx]
+
+		# get the weak individuals
+		weak_idx = np.argsort(self.cost)[::-1][:self.n_elite]
+
+		# replace the weak by elite
+		self.pop[weak_idx] = elite_pop
+		self.cost[weak_idx] = elite_cost
 
 	def crossover(self):
 		'''
@@ -111,6 +144,14 @@ class GA():
 				temp = self.pop[i,pos[0]]
 				self.pop[i,pos[0]] = self.pop[i,pos[1]]
 				self.pop[i,pos[1]] = temp
+
+	def updateCost(self):
+		self.cost = self.computeCost()
+
+	def getBestPop(self):
+		idx = np.argmin(self.cost)
+		return self.pop[idx], self.cost[idx]
+		
 				
 
 
