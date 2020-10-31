@@ -13,16 +13,18 @@ cities = [	[0.3642,0.7770],
 			[0.3479,0.6984],
 			[0.4516,0.0488]	]
 
-n_gen = 1000
-
-ga = GA(cities, start_city=0, 
-				population_size=20, 
-				crossover_rate=0.8, 
-				mutation_rate=0.1,
-				elite_rate=0.1,
-				seed=0)
+n_city = 10
+n_gen = 100
 
 visualizer = Visualizer()
+visualizer.drawMap(cities)
+
+ga = GA(cities, start_city=0, 
+			population_size=20, 
+			crossover_rate=0.8, 
+			mutation_rate=0.1,
+			elite_rate=0.1,
+			seed=0)
 
 for gen in range(n_gen):
 	ga.select()
@@ -36,5 +38,32 @@ for gen in range(n_gen):
 
 	visualizer.append(cost)
 
-visualizer.draw()
+# visualizer.draw()
+
+visualizer.drawMap(cities)
+
+
+# for i in range(n_city):
+# 	ga = GA(cities, start_city=i, 
+# 				population_size=20, 
+# 				crossover_rate=0.8, 
+# 				mutation_rate=0.1,
+# 				elite_rate=0.1,
+# 				seed=0)
+
+# 	for gen in range(n_gen):
+# 		ga.select()
+# 		ga.crossover()
+# 		ga.mutation()
+# 		ga.updateCost()
+# 		ga.eliteSurvive()
+
+# 		path, cost = ga.getBestPop()
+# 		print('Gen:{} Best path:{} Cost:{}'.format(gen+1, path, cost))
+
+# 		# visualizer.append(i, cost)
+# 		visualizer.multiAppend(i, cost)
+
+# # visualizer.draw()
+# visualizer.multiDraw()
 
