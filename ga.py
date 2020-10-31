@@ -8,6 +8,7 @@ class GA():
 						crossover_rate=0.8, 
 						mutation_rate=0.1, 
 						elite_rate=0.1,
+						atsp=False,
 						seed=0):
 
 		# set seed for reproducing result
@@ -25,6 +26,10 @@ class GA():
 
 		# the size of the chromosome is the no. of cities
 		self.dna_size = len(cities)
+
+		# advanced setting
+		# asymmetric traveling salesman problem
+		self.atsp = atsp
 
 		# buffer the result of distance between 2 cities
 		# to save computation
@@ -61,7 +66,11 @@ class GA():
 				d = np.sqrt(np.square(self.cities[i][0]-self.cities[j][0])+
 						np.square(self.cities[i][1]-self.cities[j][1]))
 				dist[i][j] = d
-				dist[j][i] = d
+
+				if self.atsp:
+					dist[j][i] = d*2
+				else:
+					dist[j][i] = d
 		return dist
 
 	def computeCost(self):

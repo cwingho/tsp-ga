@@ -1,4 +1,5 @@
 from ga import GA
+from visualizer import Visualizer
 
 # define 10 cities
 cities = [	[0.3642,0.7770],
@@ -12,7 +13,7 @@ cities = [	[0.3642,0.7770],
 			[0.3479,0.6984],
 			[0.4516,0.0488]	]
 
-n_gen = 10000
+n_gen = 1000
 
 ga = GA(cities, start_city=0, 
 				population_size=20, 
@@ -20,6 +21,8 @@ ga = GA(cities, start_city=0,
 				mutation_rate=0.1,
 				elite_rate=0.1,
 				seed=0)
+
+visualizer = Visualizer()
 
 for gen in range(n_gen):
 	ga.select()
@@ -30,4 +33,8 @@ for gen in range(n_gen):
 
 	path, cost = ga.getBestPop()
 	print('Gen:{} Best path:{} Cost:{}'.format(gen+1, path, cost))
+
+	visualizer.append(cost)
+
+visualizer.draw()
 
