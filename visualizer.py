@@ -56,6 +56,7 @@ class Visualizer():
 		plt.savefig(self.save_dir+'/'+self.file_name+'.png')
 
 	def drawMap(self,cities):
+		padding = 0.01
 		cities = np.asarray(cities)
 		plt.xlim(0, 1)
 		plt.ylim(0, 1)
@@ -65,11 +66,10 @@ class Visualizer():
 		plt.tight_layout()
 		plt.scatter(cities[:,0],cities[:,1],color = 'r')
 
-		for i in cities:
-			plt.annotate(i+1, (cities[i][0],cities[i][1]))
+		for idx,c in enumerate(cities):
+			plt.annotate(idx+1, (c[0]+padding,c[1]+padding))
 
 		plt.savefig(self.save_dir+'/map.png')
-		pass
 
 
 
