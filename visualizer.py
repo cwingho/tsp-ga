@@ -28,10 +28,10 @@ class Visualizer():
 		self.y.append(y)
 		self.cnt += 1
 
-	def multiAppend(self,idx,y):
-		self.multi_y[idx].append(y)
-
 	def draw(self):
+		'''
+		Draw a cost chart
+		'''
 		plt.figure(figsize=(15, 5))
 		plt.plot(self.x,self.y)
 		
@@ -41,7 +41,13 @@ class Visualizer():
 
 		plt.savefig(self.save_dir+'/'+self.file_name+'.png')
 
+	def multiAppend(self,idx,y):
+		self.multi_y[idx].append(y)
+
 	def multiDraw(self):
+		'''
+		Draw multiple cost chart
+		'''
 		plt.figure(figsize=(15, 12))
 		for i in range(self.n_fig):
 			plt.subplot(4,3,i+1)
@@ -55,21 +61,51 @@ class Visualizer():
 		plt.tight_layout()
 		plt.savefig(self.save_dir+'/'+self.file_name+'.png')
 
-	def drawMap(self,cities):
+	def drawMap(self,cities,path=None,save=True,title='Map'):
+		'''
+		Draw a map
+		'''
 		padding = 0.01
 		cities = np.asarray(cities)
 		plt.xlim(0, 1)
 		plt.ylim(0, 1)
-		plt.title('Map')
+		plt.title(title)
 		plt.xlabel('x')
 		plt.ylabel('y')
 		plt.tight_layout()
-		plt.scatter(cities[:,0],cities[:,1],color = 'r')
+
+		# draw city
+		plt.scatter(cities[:,0],cities[:,1],color='r')
+
+		# draw line
+		path = cities[path]
+		plt.plot(path[:,0],path[:,1],color='b')
 
 		for idx,c in enumerate(cities):
 			plt.annotate(idx+1, (c[0]+padding,c[1]+padding))
 
-		plt.savefig(self.save_dir+'/map.png')
+		if save:
+			plt.savefig(self.save_dir+'/map.png')
+
+	def multiDrawMap(self,cities,path=None):
+		'''
+		Draw multiple map
+		'''
+
+		# append the starting city to the end to form a close loop
+		path = np.asarray(path)
+		_path = np.zeros((len(path),len(path)+1),dtype=np.int32)
+		_path[:,:-1] = path
+		_path[:,-1] = path[:,0]
+
+		plt.figure(figsize=(15, 12))
+		for i in range(self.n_fig):
+			plt.subplot(4,3,i+1)
+			plt.subplots_adjust(hspace = 0.25)
+			self.drawMap(cities=cities,path=_path[i],save=False,title="Starting city {}".format(i+1))
+
+		plt.savefig(self.save_dir+'/multi_route_map.png')
+		
 
 
 
