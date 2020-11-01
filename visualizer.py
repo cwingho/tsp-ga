@@ -57,6 +57,16 @@ class Visualizer():
 			plt.title("Starting city {}".format(i+1))
 			plt.xlabel(self.x_label)
 			plt.ylabel(self.y_label)
+		
+		# c = [0,6,35,49]
+		# for i,cidx in enumerate(c):
+		# 	plt.subplot(1,4,i+1)
+		# 	plt.subplots_adjust(hspace = 0.25)
+		# 	plt.plot([c for c in range(len(self.multi_y[cidx]))], self.multi_y[cidx])
+
+		# 	plt.title("Starting city {}".format(cidx+1))
+		# 	plt.xlabel(self.x_label)
+		# 	plt.ylabel(self.y_label)
 
 		plt.tight_layout()
 		plt.savefig(self.save_dir+'/'+self.file_name+'.png')
@@ -98,11 +108,18 @@ class Visualizer():
 		_path[:,:-1] = path
 		_path[:,-1] = path[:,0]
 
+		# c = [0,6,35,49]
+
 		plt.figure(figsize=(15, 12))
 		for i in range(self.n_fig):
 			plt.subplot(4,3,i+1)
 			plt.subplots_adjust(hspace = 0.25)
 			self.drawMap(cities=cities,path=_path[i],save=False,title="Starting city {}".format(i+1))
+		
+		# for i,cidx in enumerate(c):
+		# 	plt.subplot(1,4,i+1)
+		# 	plt.subplots_adjust(hspace = 0.25)
+		# 	self.drawMap(cities=cities,path=_path[cidx],save=False,title="Starting city {}".format(cidx+1))
 
 		plt.savefig(self.save_dir+'/multi_route_map.png')
 		
