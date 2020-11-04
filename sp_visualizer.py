@@ -2,29 +2,22 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
+from visualizer import Visualizer
 
-class Visualizer():
+class SPVisualizer(Visualizer):
 	def __init__(self,	save_dir='./result/', 
 						file_name='output',
 						title='Cost',
 						x_label='Generation',
 						y_label='Cost/f(x)',
 						n_fig=10):
-		self.x = list()
-		self.y = list()
-		self.cnt = 1
 
-		self.save_dir = save_dir
-		self.file_name = file_name
-		self.title = title
-		self.x_label = x_label
-		self.y_label = y_label
-
-		self.multi_y = [list() for i in range(n_fig)]
-		self.n_fig = n_fig
-
-		self.color_choice = np.asarray(['r','g','b','y','m','c','k'])
-		self.color = 'r'
+		super().__init__(	save_dir=save_dir, 
+							file_name=file_name,
+							title=title,
+							x_label=x_label,
+							y_label=y_label,
+							n_fig=n_fig)
 
 	def append(self,y):
 		self.x.append(self.cnt)
@@ -74,7 +67,7 @@ class Visualizer():
 		plt.tight_layout()
 		plt.savefig(self.save_dir+'/'+self.file_name+'.png')
 
-	def drawMap(self,cities,path=None,save=True,title='Map'):
+	def drawMap(self,cities,path_list=None,label=None,save=True,title='Map'):
 		'''
 		Draw a map
 		'''
@@ -88,17 +81,21 @@ class Visualizer():
 		plt.tight_layout()
 
 		# draw city
-		plt.scatter(cities[:,0],cities[:,1],color=self.color)
+		plt.scatter(cities[:,0],cities[:,1],color='r')
 
 		# draw line
-		path = cities[path]
-		plt.plot(path[:,0],path[:,1],color='b')
+		for i in range(len(path_list)):
+			path = cities[label==i]
+			plt.plot(path[:,0],path[:,1],color='b')
 
 		for idx,c in enumerate(cities):
 			plt.annotate(idx+1, (c[0]+padding,c[1]+padding))
 
 		if save:
 			plt.savefig(self.save_dir+'/map.png')
+
+	def save(self):
+		plt.savefig(self.save_dir+'/map.png')		
 
 	def multiDrawMap(self,cities,path=None):
 		'''
@@ -107,9 +104,8 @@ class Visualizer():
 
 		# append the starting city to the end to form a close loop
 		path = np.asarray(path)
-		_path = np.zeros((len(path),len(path)+1),dtype=np.int32)
-		_path[:,:-1] = path
-		_path[:,-1] = path[:,0]
+		_path = np.zeros((len(path),len(path)),dtype=np.int32)
+		_path = path
 
 		# c = [0,6,35,49]
 
@@ -125,10 +121,6 @@ class Visualizer():
 		# 	self.drawMap(cities=cities,path=_path[cidx],save=False,title="Starting city {}".format(cidx+1))
 
 		plt.savefig(self.save_dir+'/multi_route_map.png')
-
-	def setColor(self,c):
-		c = np.asarray(c)
-		self.color = self.color_choice[c]
 		
 
 
