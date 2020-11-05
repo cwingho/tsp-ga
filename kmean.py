@@ -18,13 +18,4 @@ class Kmean():
 
 	def getLabel(self):
 		return self.kmeans.labels_
-	# def drawMap(self):
-	# 	colors = np.asarray(['r','g','b','y','m','c','k'])
-	# 	colors = colors[self.kmeans.labels_]
-
-	# 	plt.scatter(self.cities[:,0],self.cities[:,1],color=colors)
-
-	# 	plt.savefig(self.save_dir+'/class_map.png')
-
-
-
+	

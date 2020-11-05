@@ -91,8 +91,9 @@ class Visualizer():
 		plt.scatter(cities[:,0],cities[:,1],color=self.color)
 
 		# draw line
-		path = cities[path]
-		plt.plot(path[:,0],path[:,1],color='b')
+		if path:
+			path = cities[path]
+			plt.plot(path[:,0],path[:,1],color='b')
 
 		for idx,c in enumerate(cities):
 			plt.annotate(idx+1, (c[0]+padding,c[1]+padding))

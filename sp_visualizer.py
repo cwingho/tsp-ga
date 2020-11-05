@@ -81,15 +81,41 @@ class SPVisualizer(Visualizer):
 		plt.tight_layout()
 
 		# draw city
-		plt.scatter(cities[:,0],cities[:,1],color='r')
+		plt.scatter(cities[:,0],cities[:,1],color=self.color)
 
 		# draw line
-		for i in range(len(path_list)):
-			path = cities[label==i]
-			plt.plot(path[:,0],path[:,1],color='b')
+		if path_list:
+			for i in range(len(path_list)):
+				c = cities[label==i]
+				path = c[path_list[i]]
+				plt.plot(path[:,0],path[:,1],color=self.color_choice[i])
 
 		for idx,c in enumerate(cities):
 			plt.annotate(idx+1, (c[0]+padding,c[1]+padding))
+
+		if save:
+			plt.savefig(self.save_dir+'/map.png')
+
+	def _drawMap(self,cities,path=None,save=True,title='Map'):
+		'''
+		Draw a map
+		'''
+		padding = 0.01
+		cities = np.asarray(cities)
+		plt.xlim(0, 1)
+		plt.ylim(0, 1)
+		plt.title(title)
+		plt.xlabel('x')
+		plt.ylabel('y')
+		plt.tight_layout()
+
+		_path = np.zeros(len(path)+1,dtype=np.int32)
+		_path[:-1] = path
+		_path[-1] = path[0]
+
+		# draw line
+		path = cities[_path]
+		plt.plot(path[:,0],path[:,1],color='k')
 
 		if save:
 			plt.savefig(self.save_dir+'/map.png')
