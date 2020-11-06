@@ -81,7 +81,7 @@ class Visualizer():
 		plt.scatter(cities[:,0],cities[:,1],color=self.color)
 
 		# draw line
-		if path:
+		if path is not None:
 			path = cities[path]
 			plt.plot(path[:,0],path[:,1],color='b')
 
