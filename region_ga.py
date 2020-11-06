@@ -48,30 +48,8 @@ class RGA():
 		pop = np.zeros((pop_size,dna_size), dtype=int)
 		for i in range(pop_size):
 			pop[i] = np.arange(dna_size)
-			# np.random.shuffle(pop[i])
-
-			# # put the start node at the begining
-			# if pop[i][0] != start_city:
-			# 	pop[i][pop[i] == start_city] = pop[i][0]
-			# 	pop[i][0] = start_city
+			
 		return pop
-
-	def computeDist(self, dna_size):
-		'''
-		compute the distance between each city and save for buffering
-		'''
-		dist = np.zeros((dna_size, dna_size))
-		for i in range(dna_size):
-			for j in range(i+1, dna_size):
-				d = np.sqrt(np.square(self.cities[i][0]-self.cities[j][0])+
-						np.square(self.cities[i][1]-self.cities[j][1]))
-				dist[i][j] = d
-
-				if self.atsp:
-					dist[j][i] = d*2
-				else:
-					dist[j][i] = d
-		return dist
 
 	def computeCost(self):
 		cost = np.zeros(self.pop_size)
@@ -80,39 +58,6 @@ class RGA():
 			y = np.roll(self.pop[i], -1)[1::2]
 			cost[i] = np.sum(self.dist[x,y])
 		return cost
-
-	def select(self):
-		'''
-		select the individuals based on the their cost
-		lower cost, high prob to be selected
-		selected individuals (elite) will replace the whole populations
-		'''
-		p = np.reciprocal(self.cost)
-		idx = np.random.choice(np.arange(self.pop_size),size=self.pop_size,
-								replace=True,p=p/p.sum())
-
-		self.saveLastGen()
-		self.pop = self.pop[idx]
-
-	def saveLastGen(self):
-		'''
-		save the current pop and cost fot next generation
-		'''
-		self.last_pop = self.pop.copy()
-		self.last_cost = self.cost.copy()
-
-	def eliteSurvive(self):
-		# get the elite individuals
-		elite_idx = np.argsort(self.last_cost)[:self.n_elite]
-		elite_pop = self.last_pop[elite_idx]
-		elite_cost = self.last_cost[elite_idx]
-
-		# get the weak individuals
-		weak_idx = np.argsort(self.cost)[::-1][:self.n_elite]
-
-		# replace the weak by elite
-		self.pop[weak_idx] = elite_pop
-		self.cost[weak_idx] = elite_cost
 
 	def crossover(self):
 		'''
@@ -183,12 +128,6 @@ class RGA():
 				self.pop[i,pos[1]] = temp1
 				self.pop[i,pos[1]+1] = temp2
 
-	def updateCost(self):
-		self.cost = self.computeCost()
-
-	def getBestPop(self):
-		idx = np.argmin(self.cost)
-		return self.pop[idx], self.cost[idx]
 		
 				
 

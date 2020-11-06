@@ -19,11 +19,6 @@ class SPVisualizer(Visualizer):
 							y_label=y_label,
 							n_fig=n_fig)
 
-	def append(self,y):
-		self.x.append(self.cnt)
-		self.y.append(y)
-		self.cnt += 1
-
 	def draw(self):
 		'''
 		Draw a cost chart
@@ -35,36 +30,6 @@ class SPVisualizer(Visualizer):
 		plt.xlabel(self.x_label)
 		plt.ylabel(self.y_label)
 
-		plt.savefig(self.save_dir+'/'+self.file_name+'.png')
-
-	def multiAppend(self,idx,y):
-		self.multi_y[idx].append(y)
-
-	def multiDraw(self):
-		'''
-		Draw multiple cost chart
-		'''
-		plt.figure(figsize=(15, 12))
-		for i in range(self.n_fig):
-			plt.subplot(4,3,i+1)
-			plt.subplots_adjust(hspace = 0.25)
-			plt.plot([c for c in range(len(self.multi_y[i]))], self.multi_y[i])
-
-			plt.title("Starting city {}".format(i+1))
-			plt.xlabel(self.x_label)
-			plt.ylabel(self.y_label)
-		
-		# c = [0,6,35,49]
-		# for i,cidx in enumerate(c):
-		# 	plt.subplot(1,4,i+1)
-		# 	plt.subplots_adjust(hspace = 0.25)
-		# 	plt.plot([c for c in range(len(self.multi_y[cidx]))], self.multi_y[cidx])
-
-		# 	plt.title("Starting city {}".format(cidx+1))
-		# 	plt.xlabel(self.x_label)
-		# 	plt.ylabel(self.y_label)
-
-		plt.tight_layout()
 		plt.savefig(self.save_dir+'/'+self.file_name+'.png')
 
 	def drawMap(self,cities,path_list=None,label=None,save=True,title='Map'):
@@ -133,18 +98,11 @@ class SPVisualizer(Visualizer):
 		_path = np.zeros((len(path),len(path)),dtype=np.int32)
 		_path = path
 
-		# c = [0,6,35,49]
-
 		plt.figure(figsize=(15, 12))
 		for i in range(self.n_fig):
 			plt.subplot(4,3,i+1)
 			plt.subplots_adjust(hspace = 0.25)
 			self.drawMap(cities=cities,path=_path[i],save=False,title="Starting city {}".format(i+1))
-		
-		# for i,cidx in enumerate(c):
-		# 	plt.subplot(1,4,i+1)
-		# 	plt.subplots_adjust(hspace = 0.25)
-		# 	self.drawMap(cities=cities,path=_path[cidx],save=False,title="Starting city {}".format(cidx+1))
 
 		plt.savefig(self.save_dir+'/multi_route_map.png')
 		
